@@ -40,12 +40,30 @@ func (l *lexer) NextToken() token.Token {
 			Literal: string(ch),
 		}
 	case ':':
-		panic("case : : not implement")
+		tok = token.Token{
+			Type:    token.COLON,
+			Literal: string(ch),
+		}
 	case ',':
 		panic("case , : not implement")
 	default:
-		{
-			// string literal
+		// String literal
+		if ch == '"' {
+			ltr := ""
+			for {
+				l.index += 1
+				l.nextIndex = l.index + 1
+
+				// TODO: Implement to escape Double Quotation(\")
+				if l.rawJSON[l.index] == '"' {
+					tok = token.Token{
+						Type:    token.STRING,
+						Literal: ltr,
+					}
+					break
+				}
+				ltr += string(l.rawJSON[l.index])
+			}
 		}
 		{
 			// number case
