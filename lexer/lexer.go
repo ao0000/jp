@@ -45,7 +45,10 @@ func (l *lexer) NextToken() token.Token {
 			Literal: string(ch),
 		}
 	case ',':
-		panic("case , : not implement")
+		tok = token.Token{
+			Type:    token.COMMA,
+			Literal: string(ch),
+		}
 	default:
 		// String literal
 		if ch == '"' {

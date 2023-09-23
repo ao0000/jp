@@ -29,6 +29,20 @@ func TestNextToken(t *testing.T) {
 				{Type: token.RBRACE, Literal: "}"},
 			},
 		},
+		{"Input JSON argument is some objects has a set of key and string value",
+			"{\"key1\":\"value1\",\"key2\":\"value2\"}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key1"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.STRING, Literal: "value1"},
+				{Type: token.COMMA, Literal: ","},
+				{Type: token.STRING, Literal: "key2"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.STRING, Literal: "value2"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
