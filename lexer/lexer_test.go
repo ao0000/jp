@@ -61,6 +61,24 @@ func TestNextToken(t *testing.T) {
 				{Type: token.RBRACE, Literal: "}"},
 			},
 		},
+		{"Input JSON argument is a object has a set of key and null and an array",
+			"{\"key1\":null,\"key2\":[true,false]}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key1"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.NULL, Literal: "null"},
+				{Type: token.COMMA, Literal: ","},
+				{Type: token.STRING, Literal: "key2"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.LBRACK, Literal: "["},
+				{Type: token.TRUE, Literal: "true"},
+				{Type: token.COMMA, Literal: ","},
+				{Type: token.FALSE, Literal: "false"},
+				{Type: token.RBRACK, Literal: "]"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
