@@ -79,6 +79,36 @@ func TestNextToken(t *testing.T) {
 				{Type: token.RBRACE, Literal: "}"},
 			},
 		},
+		{"Input JSON argument is a object has a set of key and number value",
+			"{\"key\":1}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.NUMBER, Literal: "1"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
+		{"Input JSON argument is a object has a set of key and negative number value",
+			"{\"key\":-1}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.NUMBER, Literal: "-1"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
+		{"Input JSON argument is a object has a set of key and decimal number value",
+			"{\"key\":1.1}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.NUMBER, Literal: "1.1"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

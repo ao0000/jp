@@ -11,9 +11,8 @@ const (
 	ILLEGAL TokenType = "ILLEGAL" // ILLEGAL
 	EOF               = "EOF"     // EOF
 
-	STRING  = "STRING"  // STRING
-	INTEGER = "INTEGER" // INTEGER
-	FLOAT   = "FLOAT"   // FLOAT
+	STRING = "STRING" // STRING
+	NUMBER = "NUMBER" // NUMBER
 
 	NULL  = "NULL"  // null
 	TRUE  = "TRUE"  // true

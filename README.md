@@ -12,7 +12,5 @@ value = null | boolean | string | number | array | object .
 null = "null" .
 boolean = "true" | "false" .
 string = { "a"..."z" | "A"..."Z" } .
-number = integer | float .
-integer = [ "-" ] { "1"..."9" } "0"..."9" .
-float = integer [ "." { "0"..."9" } "1"..."9" ] .
+number = [ "-" ] { "1"..."9" } "0"..."9" [ "." { "0"..."9" } "1"..."9" ] .
 ```
