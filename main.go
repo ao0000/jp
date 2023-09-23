@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/ao0000/jp/lexer"
+	"github.com/ao0000/jp/token"
+)
 
 func main() {
-	fmt.Println("Hello world!")
+	l := lexer.NewLexer("{}")
+	for {
+		tok := l.NextToken()
+		if tok.Type == token.EOF {
+			break
+		}
+		fmt.Println(tok)
+	}
 }
