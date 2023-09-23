@@ -28,7 +28,7 @@ const (
 	COMMA = "COMMA" // ,
 )
 
-var keywords = map[string]TokenType{
+var ReservedWords = map[string]TokenType{
 	"null":  NULL,
 	"true":  TRUE,
 	"false": FALSE,

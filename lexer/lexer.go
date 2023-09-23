@@ -67,12 +67,34 @@ func (l *lexer) NextToken() token.Token {
 				}
 				ltr += string(l.rawJSON[l.index])
 			}
+		} else if isLetter(ch) {
+			idnt := string(ch)
+			for {
+				nextCh := l.rawJSON[l.nextIndex]
+				if isLetter(nextCh) {
+					idnt += string(nextCh)
+				} else {
+					break
+				}
+
+				l.index += 1
+				l.nextIndex = l.index + 1
+			}
+
+			if tokType, ok := token.ReservedWords[idnt]; ok {
+				tok = token.Token{
+					Type:    tokType,
+					Literal: idnt,
+				}
+			} else {
+				tok = token.Token{
+					Type:    token.ILLEGAL,
+					Literal: idnt,
+				}
+			}
 		}
 		{
 			// number case
-		}
-		{
-			// reserved word
 		}
 	}
 
@@ -81,4 +103,8 @@ func (l *lexer) NextToken() token.Token {
 	l.nextIndex = l.index + 1
 
 	return tok
+}
+
+func isLetter(ch byte) bool {
+	return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z')
 }
