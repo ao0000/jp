@@ -1,5 +1,5 @@
-# Jp (Json parser)
-Jp is toy JSON(JavaScript Object Notation) parser.
+# Jp
+Jp is JSON(JavaScript Object Notation) parser.
 
 ## Syntax
 EBNF(Extended Backus-Naur Form)
