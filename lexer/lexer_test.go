@@ -129,6 +129,13 @@ func TestNextToken(t *testing.T) {
 				{Type: token.RBRACE, Literal: "}"},
 			},
 		},
+		{"Input JSON argument is empty object including white space",
+			"{ }",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

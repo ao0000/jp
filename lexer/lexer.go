@@ -29,6 +29,17 @@ func (l *lexer) NextToken() token.Token {
 	}
 
 	ch := l.rawJSON[l.index]
+	// skip white space
+	for {
+		ch = l.rawJSON[l.index]
+		if ch == ' ' {
+			l.index += 1
+			l.nextIndex = l.index + 1
+		} else {
+			break
+		}
+	}
+
 	var tok token.Token
 
 	switch ch {
