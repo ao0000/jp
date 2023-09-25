@@ -4,14 +4,17 @@ import (
 	"github.com/ao0000/jp/token"
 )
 
+type Lexer interface {
+	NextToken() token.Token
+}
+
 type lexer struct {
 	rawJSON   string
 	index     int
 	nextIndex int
 }
 
-// TODO: Extract lexer's behavior to interface etc
-func NewLexer(input string) *lexer {
+func NewLexer(input string) Lexer {
 	return &lexer{
 		rawJSON:   input,
 		index:     0,
@@ -26,7 +29,7 @@ func (l *lexer) NextToken() token.Token {
 	}
 
 	ch := l.rawJSON[l.index]
-	tok := token.Token{Type: token.ILLEGAL}
+	var tok token.Token
 
 	switch ch {
 	case '{':
@@ -103,8 +106,7 @@ func (l *lexer) NextToken() token.Token {
 					Literal: idnt,
 				}
 			}
-		}
-		if isNumber(ch) || ch == '-' {
+		} else if isNumber(ch) || ch == '-' {
 			// number case
 			num := string(ch)
 			for {
@@ -121,6 +123,8 @@ func (l *lexer) NextToken() token.Token {
 				Type:    token.NUMBER,
 				Literal: num,
 			}
+		} else {
+			tok = token.Token{Type: token.ILLEGAL}
 		}
 	}
 
