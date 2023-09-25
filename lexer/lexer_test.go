@@ -109,6 +109,26 @@ func TestNextToken(t *testing.T) {
 				{Type: token.RBRACE, Literal: "}"},
 			},
 		},
+		{"Input JSON argument is a object has a set of key and illegal value",
+			"{\"key\":illegal}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.ILLEGAL, Literal: "illegal"},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
+		{"Input JSON argument is a object has a set of key and illegal character value",
+			"{\"key\":*}",
+			[]token.Token{
+				{Type: token.LBRACE, Literal: "{"},
+				{Type: token.STRING, Literal: "key"},
+				{Type: token.COLON, Literal: ":"},
+				{Type: token.ILLEGAL},
+				{Type: token.RBRACE, Literal: "}"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
