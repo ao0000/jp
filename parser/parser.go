@@ -85,12 +85,15 @@ func (p *parser) parseArray() *ast.Array {
 	for {
 		if p.curToken.Type == token.RBRACK {
 			p.nextToken()
-			ast.NewArray(v)
+			return ast.NewArray(v)
 		}
-		p.parseValue()
+
+		tv := p.parseValue()
+		v = append(v, tv)
+
 		if p.curToken.Type == token.COMMA {
 			p.nextToken()
-		} else {
+		} else if p.curToken.Type != token.RBRACK {
 			p.errors = append(p.errors, fmt.Errorf("failed to parseArray unexpected token: %+v", p.curToken))
 			p.nextToken()
 		}

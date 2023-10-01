@@ -98,6 +98,59 @@ func Test_parser_Parse(t *testing.T) {
 				),
 			),
 		},
+		{
+			name: "array string case",
+			str:  "[]",
+			want: ast.NewJSON(
+				ast.NewArray([]ast.Value{}),
+			),
+		},
+		{
+			name: "array string case",
+			str:  "[\"value1\"]",
+			want: ast.NewJSON(
+				ast.NewArray([]ast.Value{
+					ast.NewString(token.Token{token.STRING, "value1"}),
+				}),
+			),
+		},
+		{
+			name: "array string case",
+			str:  "[\"value1\",\"value2\"]",
+			want: ast.NewJSON(
+				ast.NewArray([]ast.Value{
+					ast.NewString(token.Token{token.STRING, "value1"}),
+					ast.NewString(token.Token{token.STRING, "value2"}),
+				}),
+			),
+		},
+		{
+			name: "array string case",
+			str:  "[{\"key1\",\"value1\"},{\"key2\",\"value2\"}]",
+			want: ast.NewJSON(
+				ast.NewArray([]ast.Value{
+					ast.NewObject(
+						[]*ast.String{ast.NewString(token.Token{token.STRING, "key1"})},
+						[]ast.Value{ast.NewString(token.Token{token.STRING, "value1"})},
+					),
+					ast.NewObject(
+						[]*ast.String{ast.NewString(token.Token{token.STRING, "key2"})},
+						[]ast.Value{ast.NewString(token.Token{token.STRING, "value2"})},
+					),
+				}),
+			),
+		},
+		{
+			name: "array number case",
+			str:  "[123,234]",
+			want: ast.NewJSON(
+				ast.NewArray(
+					[]ast.Value{
+						ast.NewNumber[int64](token.Token{token.NUMBER, "123"}, 123),
+						ast.NewNumber[int64](token.Token{token.NUMBER, "234"}, 234),
+					}),
+			),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
