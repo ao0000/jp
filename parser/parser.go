@@ -51,23 +51,20 @@ func (p *parser) parseJSON() ast.Value {
 }
 
 func (p *parser) parseObject() *ast.Object {
-	p.nextToken()
-	if p.curToken.Type == token.RBRACE {
+	if p.curToken.Type == token.LBRACE && p.peekToken.Type == token.RBRACE {
 		return ast.NewObject(nil, nil)
 	}
-	var key *ast.String
-	var value ast.Value
-
+	p.nextToken()
 	if p.curToken.Type != token.STRING {
 		p.errors = append(p.errors, fmt.Errorf("object key is unexpected token: %+v", p.curToken))
 	}
-	key = p.parseString()
+	key := p.parseString()
 	if p.curToken.Type != token.COLON {
 		p.errors = append(p.errors, fmt.Errorf("infix between object key and value unexpected token: %+v", p.curToken))
 	}
 	p.nextToken()
 
-	value = p.parseValue()
+	value := p.parseValue()
 	if p.curToken.Type != token.RBRACE {
 		p.errors = append(p.errors, fmt.Errorf("object right brace is unexpected token: %+v", p.curToken))
 	}
