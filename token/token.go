@@ -25,6 +25,9 @@ const (
 
 	COLON = "COLON" // :
 	COMMA = "COMMA" // ,
+
+	ARRAY  = "ARRAY"  // ARRAY
+	OBJECT = "OBJECT" // OBJECT
 )
 
 var ReservedWords = map[string]TokenType{
