@@ -20,7 +20,7 @@ func Test_parser_Parse(t *testing.T) {
 			name: "empty object case",
 			str:  "{}",
 			want: ast.NewJSON(
-				ast.NewObject(nil, nil),
+				ast.NewObject(map[*ast.String]ast.Value{}),
 			),
 		},
 		{
@@ -28,8 +28,9 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":\"value\"}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					ast.NewString(token.Token{token.STRING, "value"}),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewString(token.Token{token.STRING, "value"}),
+					},
 				),
 			),
 		},
@@ -38,8 +39,9 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":123}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					ast.NewNumber[int64](token.Token{token.NUMBER, "123"}, 123),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewNumber[int64](token.Token{token.NUMBER, "123"}, 123),
+					},
 				),
 			),
 		},
@@ -48,8 +50,9 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":-123}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					ast.NewNumber[int64](token.Token{token.NUMBER, "-123"}, -123),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewNumber[int64](token.Token{token.NUMBER, "-123"}, -123),
+					},
 				),
 			),
 		},
@@ -58,8 +61,9 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":1.23}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					ast.NewNumber[float64](token.Token{token.NUMBER, "1.23"}, 1.23),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewNumber[float64](token.Token{token.NUMBER, "1.23"}, 1.23),
+					},
 				),
 			),
 		},
@@ -68,8 +72,9 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":true}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					newTrueToken(),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): newTrueToken(),
+					},
 				),
 			),
 		},
@@ -78,8 +83,24 @@ func Test_parser_Parse(t *testing.T) {
 			str:  "{\"key\":null}",
 			want: ast.NewJSON(
 				ast.NewObject(
-					ast.NewString(token.Token{token.STRING, "key"}),
-					ast.NewNull(token.Token{token.NULL, "null"}),
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewNull(token.Token{token.NULL, "null"}),
+					},
+				),
+			),
+		},
+		{
+			name: "object string and nest object case",
+			str:  "{\"key\":{\"key1\":\"value1\"}}",
+			want: ast.NewJSON(
+				ast.NewObject(
+					map[*ast.String]ast.Value{
+						ast.NewString(token.Token{token.STRING, "key"}): ast.NewObject(
+							map[*ast.String]ast.Value{
+								ast.NewString(token.Token{token.STRING, "key1"}): ast.NewString(token.Token{token.STRING, "value1"}),
+							},
+						),
+					},
 				),
 			),
 		},
