@@ -51,26 +51,24 @@ func (p *parser) parseJSON() ast.Value {
 }
 
 func (p *parser) parseObject() *ast.Object {
+	keys := []*ast.String{}
+	values := []ast.Value{}
 	if p.curToken.Type == token.LBRACE && p.peekToken.Type == token.RBRACE {
-		return ast.NewObject(map[*ast.String]ast.Value{})
+		return ast.NewObject(keys, values)
 	}
 	p.nextToken()
-	var key *ast.String
-	var value ast.Value
-	kv := map[*ast.String]ast.Value{}
 	for {
 		if p.curToken.Type != token.STRING {
 			p.errors = append(p.errors, fmt.Errorf("object key is unexpected token: %+v", p.curToken))
 		}
-		key = p.parseString()
+		keys = append(keys, p.parseString())
 
 		if p.curToken.Type != token.COLON {
 			p.errors = append(p.errors, fmt.Errorf("infix between object key and value unexpected token: %+v", p.curToken))
 		}
 		p.nextToken()
 
-		value = p.parseValue()
-		kv[key] = value
+		values = append(values, p.parseValue())
 
 		if p.curToken.Type == token.RBRACE {
 			p.nextToken()
@@ -78,7 +76,7 @@ func (p *parser) parseObject() *ast.Object {
 		}
 		p.nextToken()
 	}
-	return ast.NewObject(kv)
+	return ast.NewObject(keys, values)
 }
 
 func (p *parser) parseArray() *ast.Array {

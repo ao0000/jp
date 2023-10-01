@@ -29,28 +29,33 @@ func (j *JSON) String() string {
 }
 
 type Object struct {
-	tok      token.Token
-	keyValue map[*String]Value
+	tok    token.Token
+	keys   []*String
+	values []Value
 }
 
 var _ Value = (*Object)(nil)
 
-func NewObject(kv map[*String]Value) *Object {
-	if len(kv) == 0 {
-		return &Object{tok: token.Token{Type: token.OBJECT, Literal: "{}"}, keyValue: kv}
+func NewObject(keys []*String, values []Value) *Object {
+	if len(keys) == 0 && len(values) == 0 {
+		return &Object{tok: token.Token{Type: token.OBJECT, Literal: "{}"}, keys: keys, values: values}
 	}
 
 	literal := "{"
-	for k, v := range kv {
+	reg := len(keys)
+	if reg > len(values) {
+		reg = len(values)
+	}
+	for i := 0; i < reg; i++ {
 		if literal != "{" {
 			literal += ","
 		}
-		literal += fmt.Sprintf("%s:%s", k, v)
+		literal += fmt.Sprintf("%s:%s", keys[i], values[i])
 	}
 	literal += "}"
 
 	tok := token.Token{Type: token.OBJECT, Literal: literal}
-	return &Object{tok: tok, keyValue: kv}
+	return &Object{tok: tok, keys: keys, values: values}
 }
 
 func (o *Object) Literal() string {
