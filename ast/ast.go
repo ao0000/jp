@@ -8,6 +8,7 @@ import (
 type Value interface {
 	Literal() string
 	String() string
+	Value() Value
 }
 
 type JSON struct {
@@ -28,17 +29,21 @@ func (j *JSON) String() string {
 	return j.value.String()
 }
 
+func (j *JSON) Value() Value {
+	return j.value
+}
+
 type Object struct {
 	tok    token.Token
-	keys   []*String
-	values []Value
+	Keys   []*String
+	Values []Value
 }
 
 var _ Value = (*Object)(nil)
 
 func NewObject(keys []*String, values []Value) *Object {
 	if len(keys) == 0 && len(values) == 0 {
-		return &Object{tok: token.Token{Type: token.OBJECT, Literal: "{}"}, keys: keys, values: values}
+		return &Object{tok: token.Token{Type: token.OBJECT, Literal: "{}"}, Keys: keys, Values: values}
 	}
 
 	literal := "{"
@@ -55,7 +60,7 @@ func NewObject(keys []*String, values []Value) *Object {
 	literal += "}"
 
 	tok := token.Token{Type: token.OBJECT, Literal: literal}
-	return &Object{tok: tok, keys: keys, values: values}
+	return &Object{tok: tok, Keys: keys, Values: values}
 }
 
 func (o *Object) Literal() string {
@@ -66,16 +71,20 @@ func (o *Object) String() string {
 	return o.tok.Literal
 }
 
+func (o *Object) Value() Value {
+	return o
+}
+
 type Array struct {
-	tok   token.Token
-	value []Value
+	tok    token.Token
+	Values []Value
 }
 
 var _ Value = (*Array)(nil)
 
 func NewArray(value []Value) *Array {
 	lit := fmt.Sprint("%+v", value)
-	return &Array{tok: token.Token{Type: token.ARRAY, Literal: lit}, value: value}
+	return &Array{tok: token.Token{Type: token.ARRAY, Literal: lit}, Values: value}
 }
 
 func (a *Array) Literal() string {
@@ -84,6 +93,10 @@ func (a *Array) Literal() string {
 
 func (a *Array) String() string {
 	return a.tok.Literal
+}
+
+func (a *Array) Value() Value {
+	return a
 }
 
 type Boolean struct {
@@ -111,6 +124,10 @@ func (b *Boolean) String() string {
 	return b.tok.Literal
 }
 
+func (b *Boolean) Value() Value {
+	return b
+}
+
 type String struct {
 	tok   token.Token
 	value string
@@ -128,6 +145,10 @@ func (s *String) Literal() string {
 
 func (s *String) String() string {
 	return s.tok.Literal
+}
+
+func (s *String) Value() Value {
+	return s
 }
 
 type Number[T int64 | float64] struct {
@@ -149,6 +170,10 @@ func (n *Number[T]) String() string {
 	return n.tok.Literal
 }
 
+func (n *Number[T]) Value() Value {
+	return n
+}
+
 type Null struct {
 	tok   token.Token
 	value interface{}
@@ -166,4 +191,8 @@ func (n *Null) Literal() string {
 
 func (n *Null) String() string {
 	return n.tok.Literal
+}
+
+func (n *Null) Value() Value {
+	return n
 }

@@ -31,9 +31,9 @@ func (p *parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
-func (p *parser) Parse() *ast.JSON {
+func (p *parser) Parse() (*ast.JSON, []error) {
 	json := ast.NewJSON(p.parseJSON())
-	return json
+	return json, p.errors
 }
 
 func (p *parser) parseJSON() ast.Value {
