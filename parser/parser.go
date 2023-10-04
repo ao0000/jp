@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+type Parser interface {
+	Parse() (*ast.JSON, []error)
+}
+
 type parser struct {
 	l         lexer.Lexer
 	curToken  token.Token
@@ -15,15 +19,11 @@ type parser struct {
 	errors    []error
 }
 
-func NewParser(lxr lexer.Lexer) *parser {
+func NewParser(lxr lexer.Lexer) Parser {
 	p := &parser{l: lxr, errors: []error{}}
 	p.nextToken()
 	p.nextToken()
 	return p
-}
-
-func (p *parser) Errors() []error {
-	return p.errors
 }
 
 func (p *parser) nextToken() {

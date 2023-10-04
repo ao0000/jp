@@ -1,26 +1,22 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ao0000/jp/ast"
-	"github.com/ao0000/jp/lexer"
 	"github.com/ao0000/jp/parser"
 )
 
-func App(str string) {
-	l := lexer.NewLexer(str)
-	p := parser.NewParser(l)
+func Run(p parser.Parser) error {
 	node, errs := p.Parse()
-	if len(errs) != 0 {
-		for _, err := range p.Errors() {
-			fmt.Println(err.Error())
-		}
-		return
+	if len(errs) > 0 {
+		return errors.Join(errs...)
 	}
-	run(node.Value(), 0, true)
+	printNode(node.Value(), 0, true)
+	return nil
 }
 
-func run(node ast.Value, nest int, nested bool) ast.Value {
+func printNode(node ast.Value, nest int, nested bool) ast.Value {
 	switch node.(type) {
 	case *ast.Object:
 		if n, ok := node.(*ast.Object); ok {
@@ -89,9 +85,9 @@ func printObject(object *ast.Object, nest int) {
 		if i != 0 {
 			fmt.Println(",")
 		}
-		run(object.Keys[i], nest+1, true)
+		printNode(object.Keys[i], nest+1, true)
 		fmt.Printf(": ")
-		run(object.Values[i], nest+1, false)
+		printNode(object.Values[i], nest+1, false)
 		if i == rng-1 {
 			fmt.Println()
 		}
@@ -103,7 +99,7 @@ func printArray(array *ast.Array, nest int) {
 		if i != 0 {
 			fmt.Println(",")
 		}
-		run(v, nest+1, true)
+		printNode(v, nest+1, true)
 		if i == len(array.Values)-1 {
 			fmt.Println()
 		}
